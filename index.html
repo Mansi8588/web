@@ -2,68 +2,112 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
     <title>Document</title>
-    <link rel="stylesheet" href="proj5.css">
+    
 </head>
 <body>
-    <div class="main">
-        <div class="navbar">
-            <div class="icon">
-                <h3 class="logo">
-                Manajee
-                </h3>
-            </div>
-            <div class="menu">
-                <ul>
-                    <li ><a href="#">Home</a></li>
-                    <li ><a href="#">Contact</a></li>
-                    <li ><a href="#">Service</a></li>
-                    <li ><a href="#">Design</a></li>
-                    <li ><a href="#">contant</a></li>
-
-                   
-
-
-                </ul>
-            </div>
-            <div class="search"> 
-               <input class="srch" type="search" name="" placeholder="Type To Text">
-               <a href="#"> <button class="btn">Search</button></a>
-
-            </div>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="enter the city" spellcheck="false">
+            <button class="icon"><img src="image/search.png"></button>
         </div>
-        <div class="content">
-            <h1>Web Design &<br><span>Development</span><br>Course</h1>
-            <p class="par">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur quibusdam <br>q
-                uo voluptatum eaque facere laboriosam esse omnis, asperiores accusantium quidem.
-            </p>
-         <button class="cn"><a href="#">Join Us</a></button>
+        <div class="error">
+            <p>invalid city name</p>
+        </div>
+        <div class="weather">
+            <img src="image/raining.png" class="weather-icon">
+            <h1 class="temp"> 22°C</h1>
+            <h2 class ="city">Mumbai</h2>
+            <div class="detail">
+                <div class="col">
+                    <img src="image/humidity.png">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
 
-         <div class="form">
-            <h2>Login Here</h2>
-            <input type="email" name="Email" placeholder="Type Email Here">
-            <input type="password" name="Password" placeholder="Type Password Here"><br>
-            <button class="log"><a href="#">Login</a></button>
-            <p class="Link">Don't have an account<br>
-            <a href="#">Sign up here</a></p>
-            <p class="liw">Log in with</p>
-
-            <div class="icon-i">
-                <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
-                <a href="#"><ion-icon name="logo-instagram"></ion-icon></a> 
-                <a href="#"><ion-icon name="logo-twitter"></ion-icon></a> 
-                <a href="#"><ion-icon name="logo-whatsapp"></ion-icon></a> 
-                <a href="#"><ion-icon name="logo-google"></ion-icon></a> 
-
+                </div>
+                <div class="col">
+                    <img src="image/wind.png">
+                    <div>
+                        <p class="wind"> 15km/h</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
 
             </div>
-
-         </div>
+  
         </div>
     </div>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+
+        
+        
+        const apiKey='72fa445f5ee61a96e9e86cee5de0a15a';
+        const apiURL='https://api.openweathermap.org/data/2.5/weather?units=metr ic&q=';
+        
+        const searchBox=document.querySelector(".search input");
+        const searchBtn=document.querySelector(".search button");
+        const weatherIcon=document.querySelector(".weather-icon");
+         
+    async function chechWeather(city) 
+    {
+        const response=await fetch(apiURL+city+`&appid=${apiKey}`);
+        if(response.status==404)
+        {
+            document.querySelector(".error").style.display="block";
+            document.querySelector(".weather").style.display="none";
+
+
+        }
+
+        else {
+        var data=await response.json();
+
+        console.log(data);
+
+        document.querySelector(".city").innerHTML = data.name;
+        document.querySelector(".temp").innerHTML = Math.round(data.main.temp)+"°C";
+        document.querySelector(".humidity").innerHTML = data.main.humidity+"%";
+        document.querySelector(".wind").innerHTML = data.wind.speed+"km/hr";
+
+        
+
+        if(data.weather[0].main=="Clouds"){
+            weatherIcon.src="image/cloud.png";
+
+        }
+        else if(data.weather[0].main=="Clear"){
+            weatherIcon.src="image/sunny.png";
+
+        }
+        else if(data.weather[0].main=="Rain"){
+            weatherIcon.src="image/rain.png";
+
+        }
+       else if(data.weather[0].main=="Drizzle"){
+            weatherIcon.src="image/drizzle.png";
+
+        }
+        else if(data.weather[0].main=="Mist"){
+            weatherIcon.src="img/fog.png";
+
+        }
+
+      document.querySelector(".weather").style.display="block";
+      document.querySelector(".error").style.display="none";
+
+
+    }
+
+    }
+    searchBtn.addEventListener("click",()=>{
+
+        chechWeather(searchBox.value);
+    })
+    </script>
+    
 </body>
 </html>
